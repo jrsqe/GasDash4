@@ -6,18 +6,10 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { useElecData } from './MainDashboard'
-import { INTERVAL_MAX_DAYS } from '@/lib/energyData'
+import { UI_MAX_DAYS } from '@/lib/energyData'
 
 type IntervalOption  = '5m' | '1h' | '1d'
 type DateRangeOption = 'default' | '7d' | '3d' | '1d'
-
-// Maximum days the OE API can return per interval
-// Approximate limits based on API docs / typical data volume
-const INTERVAL_MAX_DAYS: Record<string, number> = {
-  '5m':  7,    // 5-min: ~7 days max before timeout
-  '1h':  365,  // 1-hr: up to ~1 year
-  '1d':  1825, // 1-day: 5 years+
-}
 
 // Quick preset periods for date picker
 const DATE_PRESETS = [
@@ -44,7 +36,7 @@ function daysBetween(a: string, b: string): number {
 function clampDateRange(from: string, to: string, interval: string): {
   from: string; to: string; clamped: boolean; maxDays: number
 } {
-  const maxDays = INTERVAL_MAX_DAYS[interval] ?? 32
+  const maxDays = UI_MAX_DAYS[interval] ?? 32
   const days = daysBetween(from, to)
   if (days <= maxDays) return { from, to, clamped: false, maxDays }
   // Clamp: keep 'to', move 'from' forward
@@ -833,21 +825,21 @@ export default function DashboardClient({ hideHeader = false }: { hideHeader?: b
                 background:'transparent', border:'none', outline:'none', cursor:'pointer' }} />
             <span style={{ fontFamily:'var(--font-data)', fontSize:'0.62rem', color:'var(--muted)',
               whiteSpace:'nowrap', paddingLeft:'0.2rem', borderLeft:'1px solid var(--border)' }}>
-              max {INTERVAL_MAX_DAYS[interval]}d
+              max {UI_MAX_DAYS[interval]}d
             </span>
           </div>
           {/* Quick presets */}
           <div style={{ display:'flex', gap:2, background:'var(--surface-2)',
             border:'1px solid var(--border)', borderRadius:8, padding:2 }}>
             {DATE_PRESETS.map(p => {
-              const exceedsLimit = p.days > (INTERVAL_MAX_DAYS[interval] ?? 32)
+              const exceedsLimit = p.days > (UI_MAX_DAYS[interval] ?? 32)
               const isActive = dateFrom === daysAgoIso(p.days) && dateTo === todayIso()
               return (
                 <button key={p.days}
                   onClick={() => applyPreset(p.days)}
                   disabled={loading}
                   title={exceedsLimit
-                    ? `Exceeds ${INTERVAL_MAX_DAYS[interval]}d limit for ${interval} — will be auto-chunked`
+                    ? `Exceeds ${UI_MAX_DAYS[interval]}d limit for ${interval} — will be auto-chunked`
                     : undefined}
                   style={{ padding:'0.2rem 0.5rem', borderRadius:6, border:'none',
                     cursor: loading ? 'not-allowed' : 'pointer',
