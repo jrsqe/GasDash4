@@ -8,6 +8,8 @@ import {
 import { useElecData } from './MainDashboard'
 
 type IntervalOption  = '5m' | '1h' | '1d'
+type DateRangeOption = 'default' | '7d' | '3d' | '1d'
+
 const FACILITY_COLOURS = [
   '#1B5E7B','#E8632A','#2E7D4F','#7B3FA0','#B5880C',
   '#C0334A','#1A6B6B','#5C5FA8','#7A4F1E','#3D8B37',
