@@ -18,13 +18,6 @@ export const INTERVAL_MAX_DAYS: Record<string, number> = {
   '1d': 366,
 }
 
-// Maximum days the UI date picker should allow per interval.
-// More generous than the API chunk limit — the fetcher splits large ranges automatically.
-export const UI_MAX_DAYS: Record<string, number> = {
-  '5m':  7,
-  '1h':  365,
-  '1d':  1825,
-}
 
 export type IntervalOption = '5m' | '1h' | '1d'
 
